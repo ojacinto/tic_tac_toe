@@ -20,16 +20,19 @@ class TicTacToe(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, mode=None, game_state=None, select_player=0):
         self.game_state = GameState()
         self.board_painter = DrawBoard()
-        self.mode = None
+        if mode:
+            self.mode = mode
+        else:
+            self.show_menu()
+            self.mode = None
         self.is_over = False
         self.won_position = None
         self.winner = None
         self.current_player = None
         self.moves_game = []
-        self.show_menu()
         self.init_game()
         self.start_game()
 
@@ -122,16 +125,12 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
     def exit(self, base_state=False):
         self.is_over = True
         if base_state:
-            self.base_state.save()
-        print('Game over!')
+            #self.base_state.save()
+            pass
+        print('Game over!!!!')
 
     def is_game_finish(self):
-        command = capture_prompt(
-            message="Press any key to restart or `q` to exit: ")
-        if command == 'q':
-            self.exit()
-        else:
-            self.init_game()
+        self.exit(True)
 
     def show_game_result(self):
         self.board_painter.draw()
@@ -230,4 +229,8 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
 
 
 if __name__ == '__main__':
-    TicTacToe()
+    val = 1
+    game = TicTacToe()
+    while val < 10:
+        game = TicTacToe(mode=game.mode)
+        val += 1

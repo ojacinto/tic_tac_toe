@@ -60,7 +60,7 @@ class MyClassifier(object):
         except FileNotFoundError:
             clf = self.built_mlp()
             self._fit(clf)
-            self._save_classifier(clf, file)
+            self._save_classifier(clf, name_file)
         return clf
 
     def get_score(self, clf):
