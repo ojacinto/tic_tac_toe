@@ -19,7 +19,12 @@ class GameMode(object):
 
     def __new__(cls, *args, **kw):
         mode = super(GameMode, cls)
-        new_instance = mode.__new__(cls, *args, **kw)
+        new_instance = mode.__new__(cls)
+        _level = kw.get('level', None)
+        if _level:
+            new_instance._level=_level
+        else:
+            new_instance._level = None
         new_instance.draws = 0
         return new_instance
 
@@ -32,7 +37,10 @@ class HumanVSComputer(GameMode):
 
 
 class ComputerVSComputer(GameMode):
-    def __init__(self, player1='PC1', player2='PC2', game_state=None):
+    def __init__(self, player1='PC1', player2='PC2', game_state=None, level='smart'):
         self.player1 = Computer(name='ComputerRandom', shape=FigureX(), game_state=game_state,
                                 level='random')
-        self.player2 = Computer()
+        if self._level:
+            self.player2 = Computer(name='RulesPlayer', level=self._level)
+        else:
+            self.player2 = Computer(level=level)

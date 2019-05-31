@@ -8,7 +8,7 @@
 #  This is free software; you can do what the LICENCE file allows you to.
 
 from xutil import capture_prompt
-from analyzer import RandomAnalyzer, SmartAnalyzer
+from analyzer import RandomAnalyzer, SmartAnalyzer, RuleAnalyse
 from figure import FigureX, FigureZero
 
 
@@ -52,11 +52,13 @@ class Computer(Player):
         self.level = level
         self.random_analyzer = RandomAnalyzer()
         self.smart_analyser = SmartAnalyzer()
+        self.rule_analyzer = RuleAnalyse()
 
     def get_position(self, board, another_player):
         switch_level = {
             'random': self.random_analyzer.best_move,
-            'smart': self.smart_analyser.best_move
+            'rules': self.random_analyzer.best_move,
+            'smart': self.rule_analyzer.best_move
         }
         method = switch_level.get(self.level)
         return method(board)

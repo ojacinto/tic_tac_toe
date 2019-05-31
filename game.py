@@ -20,7 +20,7 @@ class TicTacToe(object):
 
     """
 
-    def __init__(self, mode=None, game_state=None, select_player=0):
+    def __init__(self, mode=None, game_state=None, select_player=0, train=False):
         self.game_state = GameState()
         self.board_painter = DrawBoard()
         if mode:
@@ -33,6 +33,7 @@ class TicTacToe(object):
         self.winner = None
         self.current_player = None
         self.moves_game = []
+        self.train = train
         self.init_game()
         self.start_game()
 
@@ -48,7 +49,7 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
         print(summary)
         input('Press enter to begin:')
 
-    def get_game_mode(self):
+    def get_game_mode(self, level=None):
         modes = {
             1: HumanVSComputer,
             2: ComputerVSComputer
@@ -63,7 +64,10 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
             game_mode = capture_prompt(message='Please select a game mode:',
                                        value=validate_value)
             class_mode = modes.get(int(game_mode))
-            return class_mode()
+            if level:
+                return class_mode(level=level)
+            else:
+                return class_mode()
 
     def ask_player_starts(self):
         print('Select the first player to play:')
@@ -80,7 +84,10 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
     def init_game(self):
         self.board = Board()
         self.board_painter.set(self.board)
-        self.mode = self.get_game_mode()
+        if self.train:
+            self.mode = self.get_game_mode(level='rules')
+        else:
+            self.mode = self.get_game_mode()
         if isinstance(self.mode, ComputerVSComputer):
             players = [self.mode.player1, self.mode.player2]
             import random
@@ -115,12 +122,33 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
                                         self.first_or_second_in_to_play(player),
                                         from_pos, score)
 
+    def _fill_positions(self, board_state, positions, value):
+        for pos in range(len(positions)):
+            board_state[positions[pos]-1] = value
+        return board_state
+
+
     def show_game_history(self):
         match = "Results: Player{0}: {1} vs Player{2}: {3} 'Draws': {4}. "
         print(match.format(
             self.mode.player1.name, self.mode.player1.game_wons,
             self.mode.player2.name, self.mode.player2.game_wons,
             self.mode.draws))
+        if self.train:
+            if self.winner and self.winner.shape.shape == 'O':
+                _copy = self.moves_game.copy()
+                target = _copy[-1] - 1
+                _copy.reverse()
+                _min1 = _copy[2::2]
+                _ones = _copy[1::2]
+                board_state = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+                board_state = self._fill_positions(board_state, _min1, -1)
+                board_state = self._fill_positions(board_state, _ones, 1)
+                line = ' '.join([str(el) for el in board_state])
+                line += ' ' + str(target) + ' \n'
+                f = open('tictact_dataset2.txt', 'a')
+                f.write(line)
+                f.close()
 
     def exit(self, base_state=False):
         self.is_over = True
@@ -159,7 +187,8 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
 
     def check_draw(self):
         if not self.board.empty_positions():
-            self.mode.draws += 1
+            if self.winner is None:
+                self.mode.draws += 1
             self.show_game_result()
 
     def verify_status_game(self):
@@ -230,7 +259,7 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
 
 if __name__ == '__main__':
     val = 1
-    game = TicTacToe()
-    while val < 10:
-        game = TicTacToe(mode=game.mode)
+    game = TicTacToe(train=True)
+    while val < 1000:
+        game = TicTacToe(mode=game.mode, train=True)
         val += 1

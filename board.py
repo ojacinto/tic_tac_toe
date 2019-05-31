@@ -8,6 +8,7 @@
 #  This is free software; you can do what the LICENCE file allows you to.
 
 from position import Position
+from figure import Figure
 from draw_board import DrawBoard
 
 
@@ -56,7 +57,7 @@ class Board(object):
         else:
             raise IndexError(message)
 
-    def _is_position_occupied(self, index):
+    def is_position_occupied(self, index):
         figure = self.get_position(index)
         return figure.occupied
 
@@ -66,11 +67,23 @@ class Board(object):
 
     def fill_position(self, index, shape):
         if self.empty_positions():
-            if self._is_position_occupied(index):
-                raise InvalidMove("Invalid position's move!")
+            if self.is_position_occupied(index):
+                raise InvalidMove("Invalid position!")
             else:
                 valid_index = self.get_index(index)
                 if valid_index > -1:
                     self.positions[valid_index].set_value(shape)
                 else:
                     raise IndexError('Invalid index!: {0}'.format(index))
+
+    def copy(self):
+        copy_board = Board()
+        for index, position in enumerate(self.positions):
+            if isinstance(position.value, Figure):
+                copy_board.positions[index].set_value(position.value)
+        return copy_board
+
+    def clear_position(self, pos):
+        if self.is_position_occupied(pos):
+            index = self.get_index(pos)
+            self.positions[index].reset()
