@@ -216,5 +216,4 @@ class RuleAnalyse(object):
 
     def best_move(self, board, player, rival_player,
                                  show_analysis=False):
-        import ipdb; ipdb.set_trace();
         return self.analyze_game(board, player, rival_player)

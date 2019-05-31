@@ -8,6 +8,7 @@
 #  This is free software; you can do what the LICENCE file allows you to.
 
 from xutil import capture_prompt, validate_value
+from generate import generate_data_set
 from draw_board import DrawBoard
 from board import Board
 from player import Human
@@ -122,12 +123,6 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
                                         self.first_or_second_in_to_play(player),
                                         from_pos, score)
 
-    def _fill_positions(self, board_state, positions, value):
-        for pos in range(len(positions)):
-            board_state[positions[pos]-1] = value
-        return board_state
-
-
     def show_game_history(self):
         match = "Results: Player{0}: {1} vs Player{2}: {3} 'Draws': {4}. "
         print(match.format(
@@ -137,18 +132,7 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
         if self.train:
             if self.winner and self.winner.shape.shape == 'O':
                 _copy = self.moves_game.copy()
-                target = _copy[-1] - 1
-                _copy.reverse()
-                _min1 = _copy[2::2]
-                _ones = _copy[1::2]
-                board_state = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-                board_state = self._fill_positions(board_state, _min1, -1)
-                board_state = self._fill_positions(board_state, _ones, 1)
-                line = ' '.join([str(el) for el in board_state])
-                line += ' ' + str(target) + ' \n'
-                f = open('tictact_dataset2.txt', 'a')
-                f.write(line)
-                f.close()
+                generate_data_set(_copy)
 
     def exit(self, base_state=False):
         self.is_over = True
