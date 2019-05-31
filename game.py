@@ -41,7 +41,7 @@ class TicTacToe(object):
     def show_menu(self):
         welcome = """!!!!!!!Welcome to Tic-Tac-Toe Game.!!!!!!!"""
         summary = """Tic-tac-toe (American English), noughts and crosses (British English), or Xs and Os
-is a paper-and-pencil game for two players, X and O, who take turns marking the spaces 
+is a paper-and-pencil game for two players, X and O, who take turns marking the spaces
 in a 3×3 grid. Each of the positions are represented with numbers from one to nine.
 If the spaces are free you can select the number that corresponds in the range of one
 to nine. Win the first to achieve three consecutive figures in a straight line."""
@@ -247,6 +247,6 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
 if __name__ == '__main__':
     val = 1
     game = TicTacToe(train=False)
-    while val < 100000:
+    while val < 20:
         game = TicTacToe(mode=game.mode, train=False)
         val += 1
