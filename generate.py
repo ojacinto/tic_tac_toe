@@ -14,7 +14,7 @@ def _fill_positions(board_state, positions, value):
     return board_state
 
 
-def generate_data_set(_copy):
+def generate_data_set(_copy, file_name):
     """Transform the moves of a game to:
     Example:
       legend: (1=>X), (-1=>0) y (0=>empty)
@@ -34,6 +34,6 @@ def generate_data_set(_copy):
     board_state = _fill_positions(board_state, _ones, 1)
     line = ' '.join([str(el) for el in board_state])
     line += ' ' + str(target) + ' \n'
-    f = open('tictact_dataset2.txt', 'a')
+    f = open(file_name, 'a')
     f.write(line)
     f.close()

@@ -58,7 +58,7 @@ class Computer(Player):
         switch_level = {
             'random': self.random_analyzer.best_move,
             'rules': self.random_analyzer.best_move,
-            'smart': self.rule_analyzer.best_move
+            'smart': self.smart_analyser.best_move
         }
         method = switch_level.get(self.level)
         return method(board)

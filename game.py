@@ -129,10 +129,13 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
             self.mode.player1.name, self.mode.player1.game_wons,
             self.mode.player2.name, self.mode.player2.game_wons,
             self.mode.draws))
+        _copy = self.moves_game.copy()
         if self.train:
             if self.winner and self.winner.shape.shape == 'O':
-                _copy = self.moves_game.copy()
-                generate_data_set(_copy)
+                generate_data_set(_copy, 'tictact_dataset2.txt')
+        # Save the logs of when the algorithm loses in intelligent mode
+        elif self.winner and self.winner.shape.shape == 'X':
+                generate_data_set(_copy, 'tictact_dataset3.txt')
 
     def exit(self, base_state=False):
         self.is_over = True
@@ -243,7 +246,7 @@ to nine. Win the first to achieve three consecutive figures in a straight line."
 
 if __name__ == '__main__':
     val = 1
-    game = TicTacToe(train=True)
-    while val < 1000:
-        game = TicTacToe(mode=game.mode, train=True)
+    game = TicTacToe(train=False)
+    while val < 100000:
+        game = TicTacToe(mode=game.mode, train=False)
         val += 1
